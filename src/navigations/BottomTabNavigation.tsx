@@ -1,21 +1,21 @@
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Feather } from '@expo/vector-icons'
-import Home from '../screens/Home'
-import Search from '../screens/Search'
-import Favorite from '../screens/Favorite'
+// src/navigations/BottomTabNavigation.tsx
 
-const Tab = createBottomTabNavigator()
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Feather } from '@expo/vector-icons';
+import HomeStackNavigation from './HomeStackNavigation';
+import Search from '../screens/Search';
+import Favorite from '../screens/Favorite';
 
-const BottomTabNavigator = (): JSX.Element => (
+const Tab = createBottomTabNavigator();
+
+const BottomTabNavigator = () => (
   <Tab.Navigator>
     <Tab.Screen
       name="Home"
-      component={Home}
+      component={HomeStackNavigation} // Menggunakan HomeStackNavigation sebagai komponen
       options={{
-        tabBarIcon: ({ color }) => (
-          <Feather name="home" size={28} color={color} />
-        ),
+        tabBarIcon: ({ color }) => <Feather name="home" size={28} color={color} />,
         headerShown: false,
       }}
     />
@@ -23,9 +23,7 @@ const BottomTabNavigator = (): JSX.Element => (
       name="Search"
       component={Search}
       options={{
-        tabBarIcon: ({ color }) => (
-          <Feather name="search" size={28} color={color} />
-        ),
+        tabBarIcon: ({ color }) => <Feather name="search" size={28} color={color} />,
         headerShown: false,
       }}
     />
@@ -33,13 +31,11 @@ const BottomTabNavigator = (): JSX.Element => (
       name="Favorite"
       component={Favorite}
       options={{
-        tabBarIcon: ({ color }) => (
-          <Feather name="heart" size={28} color={color} />
-        ),
+        tabBarIcon: ({ color }) => <Feather name="heart" size={28} color={color} />,
         headerShown: false,
       }}
     />
   </Tab.Navigator>
-)
+);
 
-export default BottomTabNavigator
+export default BottomTabNavigator;

@@ -1,11 +1,13 @@
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import BottomTabNavigator from './src/navigations/BottomTabNavigation'
+// App.tsx
 
-export default function App(): JSX.Element {
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabNavigator from './src/navigations/BottomTabNavigation';
+
+export default function App() {
   return (
     <NavigationContainer>
       <BottomTabNavigator />
     </NavigationContainer>
-  )
+  );
 }
