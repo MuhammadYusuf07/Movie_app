@@ -3,6 +3,8 @@
 ## Mobile App with React Native (Fresh Graduate)
 ## Nama: Muhammad Yusuf
 
+**Kunjungi [Expo Documentation](https://docs.expo.dev/)**
+
 ### Deskripsi
 Ini adalah proyek tugas akhir saya untuk aplikasi mobile yang dikembangkan menggunakan React Native. Aplikasi ini bertujuan untuk memberikan pengguna kemampuan untuk mencari, menampilkan detail, dan menyimpan film-film favorit mereka.
 
