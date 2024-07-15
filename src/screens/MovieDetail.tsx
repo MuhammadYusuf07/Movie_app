@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
 import { API_ACCESS_TOKEN } from '@env';
@@ -15,8 +15,13 @@ const MovieDetail = ({ route }: any): JSX.Element => {
   useEffect(() => {
     fetchMovieDetails();
     fetchRecommendations();
-    checkIsFavorite(id);
   }, [id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      checkIsFavorite(id);
+    }, [id])
+  );
 
   const fetchMovieDetails = async () => {
     const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;

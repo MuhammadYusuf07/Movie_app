@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import KeywordSearch from '../components/search/KeywordSearch';
 import CategorySearch from '../components/search/CategorySearch';
 
@@ -7,7 +7,7 @@ const Search = (): JSX.Element => {
   const [selectedBar, setSelectedBar] = useState<string>('keyword');
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View style={styles.topBarContainer}>
           {['keyword', 'category'].map((item: string, index: number) => (
@@ -32,13 +32,13 @@ const Search = (): JSX.Element => {
         </View>
         {selectedBar === 'keyword' ? <KeywordSearch /> : <CategorySearch />}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
     justifyContent: 'center',
   },

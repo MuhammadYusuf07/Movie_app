@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+const windowWidth = Dimensions.get('window').width;
 
 const FavoriteScreen = (): JSX.Element => {
   const [favorites, setFavorites] = useState<any[]>([]);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
 
   const fetchFavorites = async () => {
     try {
@@ -22,8 +20,24 @@ const FavoriteScreen = (): JSX.Element => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchFavorites();
+    }, [])
+  );
+
   const navigateToMovieDetail = (movieId: number) => {
     navigation.navigate('MovieDetail', { id: movieId });
+  };
+
+  const removeFavorite = async (movieId: number) => {
+    try {
+      const updatedFavorites = favorites.filter(item => item.id !== movieId);
+      setFavorites(updatedFavorites);
+      await AsyncStorage.setItem('@FavoriteList', JSON.stringify(updatedFavorites));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderMovieItem = ({ item }: { item: any }) => (
@@ -35,6 +49,9 @@ const FavoriteScreen = (): JSX.Element => {
           resizeMode="cover"
         />
         <Text style={styles.movieTitle}>{item.title}</Text>
+        <TouchableOpacity onPress={() => removeFavorite(item.id)} style={styles.removeButton}>
+          <Text style={styles.removeButtonText}>Remove</Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -47,7 +64,7 @@ const FavoriteScreen = (): JSX.Element => {
           data={favorites}
           renderItem={renderMovieItem}
           keyExtractor={(item) => item.id.toString()}
-          horizontal
+          horizontal={windowWidth > 600} // Horizontal on larger screens
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.movieList}
         />
@@ -77,9 +94,10 @@ const styles = StyleSheet.create({
   movieItem: {
     marginRight: 16,
     alignItems: 'center',
+    width: 200, // Adjust item width as needed
   },
   poster: {
-    width: 200,
+    width: '100%', // Full width
     height: 300,
     borderRadius: 10,
   },
@@ -87,6 +105,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     textAlign: 'center',
+    width: '100%', // Full width
+  },
+  removeButton: {
+    marginTop: 10,
+    backgroundColor: 'red',
+    padding: 5,
+    borderRadius: 5,
+  },
+  removeButtonText: {
+    color: 'white',
+    fontSize: 14,
   },
   noFavorites: {
     fontSize: 18,

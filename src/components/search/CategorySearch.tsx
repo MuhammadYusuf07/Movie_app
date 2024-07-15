@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_ACCESS_TOKEN } from '@env';
 
@@ -7,13 +7,8 @@ const categories = ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror
 
 const CategorySearch = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [movies, setMovies] = useState<any[]>([]);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    if (selectedCategory) {
-      fetchMoviesByCategory(selectedCategory);
-    }
-  }, [selectedCategory]);
 
   const fetchMoviesByCategory = async (category: string) => {
     const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${getGenreId(
@@ -30,12 +25,30 @@ const CategorySearch = (): JSX.Element => {
       const response = await fetch(url, options);
       const data = await response.json();
       console.log(`Movies in category ${category}:`, data.results);
-      navigation.navigate('MovieDetail', { id: data.results[0].id }); // Navigate to the first result
+      setMovies(data.results); // Set hasil pencarian ke state movies
     } catch (error) {
       console.error(`Error fetching movies in category ${category}:`, error);
       Alert.alert('Error', 'Failed to fetch movies');
     }
   };
+
+  const navigateToMovieDetail = (movieId: number) => {
+    navigation.navigate('MovieDetail', { id: movieId });
+  };
+
+  const renderMovieItem = ({ item }: { item: any }) => (
+    <TouchableOpacity onPress={() => navigateToMovieDetail(item.id)}>
+      <View style={styles.movieItem}>
+        <Text style={styles.movieTitle}>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchMoviesByCategory(selectedCategory);
+    }
+  }, [selectedCategory]);
 
   const getGenreId = (category: string): number => {
     switch (category.toLowerCase()) {
@@ -63,8 +76,8 @@ const CategorySearch = (): JSX.Element => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Select a category:</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.label}>Pilih kategori:</Text>
       <View style={styles.categoryList}>
         {categories.map((category) => (
           <TouchableOpacity
@@ -79,21 +92,38 @@ const CategorySearch = (): JSX.Element => {
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+
+      {movies.length > 0 && (
+        <FlatList
+          data={movies}
+          renderItem={renderMovieItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.movieList}
+        />
+      )}
+
+      {movies.length === 0 && selectedCategory && (
+        <Text style={styles.noResults}>Tidak ada film ditemukan dalam kategori ini.</Text>
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    flexGrow: 1,
+    backgroundColor: '#ffffff',
+    padding: 16,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
   },
   categoryList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 16,
   },
   categoryButton: {
     alignItems: 'center',
@@ -108,6 +138,24 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     textTransform: 'capitalize',
+  },
+  movieList: {
+    flexGrow: 1,
+    marginTop: 12,
+  },
+  movieItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 10,
+  },
+  movieTitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  noResults: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 50,
   },
 });
 
