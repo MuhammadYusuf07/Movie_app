@@ -3,6 +3,7 @@
 ## Mobile App with React Native (Fresh Graduate)
 ## Nama: Muhammad Yusuf
 
+**Kunjungi [Expo Documentation](https://docs.expo.dev/)**
 
 
 ### Deskripsi
