@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "movie-app",
+    "slug": "movie-app",
+    "description": "Aplikasi Movie App Muhammad Yusuf Digitalent FGA Kominfo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,10 +19,23 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yusuf.movieapp",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7e1756e0-2c12-4963-8aa3-409b947a7fec"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7e1756e0-2c12-4963-8aa3-409b947a7fec"
     }
   }
 }
